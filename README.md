@@ -33,7 +33,7 @@ input, select { width:100%; padding:10px; margin-top:10px; border-radius:12px; b
 <option value="superior">Estudios superiores</option>
 </select>
 
-<button onclick="goToCalibration()">Siguiente</button>
+<button type="button" onclick="goToCalibration()">Siguiente</button>
 </div>
 
 <div id="calibration" class="card hidden">
@@ -41,18 +41,18 @@ input, select { width:100%; padding:10px; margin-top:10px; border-radius:12px; b
 <p>Ajusta el volumen hasta que escuches el tono de forma cómoda (ni muy bajo ni molesto).</p>
 
 <input type="range" min="0.01" max="0.5" step="0.01" value="0.2" id="volume" class="slider">
-<button onclick="playCalibration()">Reproducir tono</button>
-<button onclick="startExperiment()">Comenzar experimento</button>
+<button type="button" onclick="playCalibration()">Reproducir tono</button>
+<button type="button" onclick="startExperiment()">Comenzar experimento</button>
 </div>
 
 <div id="experiment" class="card hidden">
 <h3 id="trialTitle"></h3>
-<button onclick="playTrial()">Escuchar</button>
+<button type="button" onclick="playTrial()">Escuchar</button>
 
 <p>¿Cuándo suena más fuerte?</p>
-<button onclick="answer(1)">Primer sonido</button>
-<button onclick="answer(2)">Segundo sonido</button>
-<button onclick="answer(0)">No percibo diferencia</button>
+<button type="button" onclick="answer(1)">Primer sonido</button>
+<button type="button" onclick="answer(2)">Segundo sonido</button>
+<button type="button" onclick="answer(0)">No percibo diferencia</button>
 </div>
 
 <div id="end" class="card hidden">
