@@ -49,7 +49,7 @@ input, select { width: 100%; padding: 10px; margin-top: 10px; border-radius: 10p
 </div>
 
 <script>
-const WEB_APP_URL = "PEGA_AQUI_TU_URL_DE_GOOGLE_APPS_SCRIPT";
+const WEB_APP_URL = https://script.google.com/macros/s/AKfycbwjHcWduCIrgj2dIfnMOh7ClcJlOuO1Jpjvo79JPdcU9GolpBGiFUKQMWw8eOChiCUchg/exec;
 
 const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 const types = ["sine","sawtooth"];
