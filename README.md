@@ -12,6 +12,7 @@ button { background:#3a86ff; border:none; padding:12px 20px; border-radius:14px;
 button:hover { background:#265ecf; }
 input, select { width:100%; padding:10px; margin-top:10px; border-radius:12px; border:none; }
 .hidden { display:none; }
+.slider { width:100%; }
 </style>
 </head>
 <body>
@@ -19,9 +20,7 @@ input, select { width:100%; padding:10px; margin-top:10px; border-radius:12px; b
 
 <div id="intro" class="card">
 <h2>Experimento auditivo</h2>
-<p>Escucharás pares de sonidos. Primero oirás un sonido base y luego otro con posible variación de amplitud.</p>
-<p>Cada sonido dura 1 segundo y están separados por 0.5 segundos.</p>
-<p>Tu tarea es indicar cuándo suena más fuerte o si no percibes diferencia.</p>
+<p>Escucharás pares de sonidos. Indica cuál suena más fuerte o si no percibes diferencia.</p>
 
 <label>Edad</label>
 <input type="number" id="age">
@@ -34,7 +33,16 @@ input, select { width:100%; padding:10px; margin-top:10px; border-radius:12px; b
 <option value="superior">Estudios superiores</option>
 </select>
 
-<button onclick="startExperiment()">Comenzar</button>
+<button onclick="goToCalibration()">Siguiente</button>
+</div>
+
+<div id="calibration" class="card hidden">
+<h2>Calibración de sonido</h2>
+<p>Ajusta el volumen hasta que escuches el tono de forma cómoda (ni muy bajo ni molesto).</p>
+
+<input type="range" min="0.01" max="0.5" step="0.01" value="0.2" id="volume" class="slider">
+<button onclick="playCalibration()">Reproducir tono</button>
+<button onclick="startExperiment()">Comenzar experimento</button>
 </div>
 
 <div id="experiment" class="card hidden">
@@ -55,16 +63,27 @@ input, select { width:100%; padding:10px; margin-top:10px; border-radius:12px; b
 
 <script>
 const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-
 const types = ["sine","sawtooth"];
 const freqs = [100,500,2000];
 
 let trials = [];
 let currentTrial = 0;
 let results = [];
+let baseVolume = 0.2;
+
+function goToCalibration() {
+  document.getElementById("intro").classList.add("hidden");
+  document.getElementById("calibration").classList.remove("hidden");
+}
+
+function playCalibration() {
+  baseVolume = parseFloat(document.getElementById("volume").value);
+  let t = audioCtx.currentTime;
+  playTone("sine", 500, baseVolume, t);
+}
 
 function generateTrials() {
-  let variations = [0.5,1,1.5,2,2.5]; // 5 variaciones
+  let variations = [0.5,1,1.5,2,2.5];
   let all = [];
 
   types.forEach(type => {
@@ -77,7 +96,7 @@ function generateTrials() {
     });
   });
 
-  return all.sort(()=>Math.random()-0.5); // total 30 pruebas
+  return all.sort(()=>Math.random()-0.5);
 }
 
 function dbToGain(db) {
@@ -101,10 +120,9 @@ function playTrial() {
   let t = audioCtx.currentTime;
   let trial = trials[currentTrial];
 
-  let baseGain = 0.2;
-  let alteredGain = baseGain * dbToGain(trial.change);
+  let alteredGain = baseVolume * dbToGain(trial.change);
 
-  playTone(trial.type, trial.freq, baseGain, t);
+  playTone(trial.type, trial.freq, baseVolume, t);
   playTone(trial.type, trial.freq, alteredGain, t + 1.5);
 }
 
@@ -135,9 +153,10 @@ function updateUI() {
 }
 
 function startExperiment() {
+  baseVolume = parseFloat(document.getElementById("volume").value);
   trials = generateTrials();
 
-  document.getElementById("intro").classList.add("hidden");
+  document.getElementById("calibration").classList.add("hidden");
   document.getElementById("experiment").classList.remove("hidden");
 
   updateUI();
